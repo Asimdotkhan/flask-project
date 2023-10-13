@@ -11,5 +11,8 @@
       "src": "/.*",
       "dest": "app.py"  // Redirect all traffic to your ASGI app
     }
-  ]
+  ],
+  "env": {
+    "QUART_APP": "app"  // Define the ASGI app to use (replace with the actual ASGI app variable)
+  }
 }
