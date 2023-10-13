@@ -1,12 +1,12 @@
 from flask import Flask, render_template, send_file, request, make_response
-# from data.file_converter import convert_file
-# from data.data_downloader import fetch_data
-# from data.data_scraper import perform_scraping, get_chart_data, get_industry_data
-# from data.ausdataset import get_latest_available_month, get_data
-# import pandas as pd
-# import json
-# import csv
-# import os
+from data.file_converter import convert_file
+from data.data_downloader import fetch_data
+from data.data_scraper import perform_scraping, get_chart_data, get_industry_data
+from data.ausdataset import get_latest_available_month, get_data
+import pandas as pd
+import json
+import csv
+import os
 
 app = Flask(__name__)
 
@@ -20,21 +20,21 @@ def welcome():
 # with open('areacode.json', 'r') as json_file:
 #     areacode_data = json.load(json_file)
 
-# @app.route('/fileconverter', methods=['GET', 'POST'])
-# def file_converter():
-#     if request.method == 'POST':
-#         file = request.files['file']
-#         file_type = request.form.get('file_type')
-#         convert_to = request.form.get('action')
+@app.route('/fileconverter', methods=['GET', 'POST'])
+def file_converter():
+    if request.method == 'POST':
+        file = request.files['file']
+        file_type = request.form.get('file_type')
+        convert_to = request.form.get('action')
 
-#         converted_file = convert_file(file, file_type, convert_to)
+        converted_file = convert_file(file, file_type, convert_to)
 
-#         if converted_file:
-#             return send_file(converted_file, as_attachment=True)
-#         else:
-#             return "Conversion failed."
+        if converted_file:
+            return send_file(converted_file, as_attachment=True)
+        else:
+            return "Conversion failed."
 
-#     return render_template('fileconverter.html')
+    return render_template('fileconverter.html')
 
 
 # @app.route('/scraper', methods=['GET', 'POST'])
