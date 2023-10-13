@@ -1,18 +1,15 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "app.py",  // Specify the entry point for your ASGI app
-      "use": "@vercel/python"  // Vercel Python builder
-    }
+      {
+          "src": "*.py",
+          "use": "@liudonghua123/now-flask"
+      }
   ],
   "routes": [
-    {
-      "src": "/.*",
-      "dest": "app.py"  // Redirect all traffic to your ASGI app
-    }
-  ],
-  "env": {
-    "QUART_APP": "app"  // Define the ASGI app to use (replace with the actual ASGI app variable)
-  }
+      {
+          "src": "(.*)",
+          "dest": "app.py"
+      }
+  ]
 }
