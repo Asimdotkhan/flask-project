@@ -37,58 +37,58 @@ def file_converter():
     return render_template('fileconverter.html')
 
 
-@app.route('/scraper', methods=['GET', 'POST'])
-def scraper():
-    endpoints_descriptions = {
-        "Gdp/_GrowthTable": "Gross Domestic Product Yearly",
-        "Gdp/_54Table":"GDP by 54 Industries",
-        "Gdp/_anzsicL1Table":"GDP by ANZSIC Level 1 Industry",
-        "Gdp/_HHITable": "HHI Index",
-        "Gdp/_cowsTable": "Dairy Cow Numbers",
-        "Gdp/_milkTable": "Milk Solids Production (Million kg)",
-        "Gdp/_herdTable": "Number of Dairy Herds",
-        "Gdp/_hectareTable": "Total Hectares in Dairy Production",
-        "Gdp/_payoutTable": "Aggregate Dairy Payout",
-        "Employment/_growthData":"Employment growth, 2001-2022",
-        "Employment/_GrowthTable": "Filled jobs",
-        "Employment/_54Table":"Filled Jobs by 54 Industry Categories",
-        "Employment/_anzsicL1Table":"Filled Jobs by ANZSIC Level 1 Industry",
-        "Productivity/_productivityGrowthTable": "Productivity",
-        "Businesses/_growthTable": "Businesses/_growthTable",
-        "Population/_GrowthTable": "Estimated resident population",
-        "StandardOfLiving/_earningsTable": "Mean annual earnings($)",
-        "Tourism/_tourismGdpTimeseries":"Tourism GDP($m)",
-        "Tourism/_tourismGdpTimeseriesData":"Tourism GDP growth, 2001-2022",
-        "Tourism/_tourismGdpShareData":"Tourism share of total GDP, 2000-2022",
-        "Employment/_unEmploymentTimeSeriesData":"Unemployment Rate Yearly",
-        "Employment/_neetTimeSeriesData":"NEET Rate (15-24 Year Olds)",
-        "Tourism/_tourismIndustryTable":"Tourism GDP relative to other industries"
-    }
+# @app.route('/scraper', methods=['GET', 'POST'])
+# def scraper():
+#     endpoints_descriptions = {
+#         "Gdp/_GrowthTable": "Gross Domestic Product Yearly",
+#         "Gdp/_54Table":"GDP by 54 Industries",
+#         "Gdp/_anzsicL1Table":"GDP by ANZSIC Level 1 Industry",
+#         "Gdp/_HHITable": "HHI Index",
+#         "Gdp/_cowsTable": "Dairy Cow Numbers",
+#         "Gdp/_milkTable": "Milk Solids Production (Million kg)",
+#         "Gdp/_herdTable": "Number of Dairy Herds",
+#         "Gdp/_hectareTable": "Total Hectares in Dairy Production",
+#         "Gdp/_payoutTable": "Aggregate Dairy Payout",
+#         "Employment/_growthData":"Employment growth, 2001-2022",
+#         "Employment/_GrowthTable": "Filled jobs",
+#         "Employment/_54Table":"Filled Jobs by 54 Industry Categories",
+#         "Employment/_anzsicL1Table":"Filled Jobs by ANZSIC Level 1 Industry",
+#         "Productivity/_productivityGrowthTable": "Productivity",
+#         "Businesses/_growthTable": "Businesses/_growthTable",
+#         "Population/_GrowthTable": "Estimated resident population",
+#         "StandardOfLiving/_earningsTable": "Mean annual earnings($)",
+#         "Tourism/_tourismGdpTimeseries":"Tourism GDP($m)",
+#         "Tourism/_tourismGdpTimeseriesData":"Tourism GDP growth, 2001-2022",
+#         "Tourism/_tourismGdpShareData":"Tourism share of total GDP, 2000-2022",
+#         "Employment/_unEmploymentTimeSeriesData":"Unemployment Rate Yearly",
+#         "Employment/_neetTimeSeriesData":"NEET Rate (15-24 Year Olds)",
+#         "Tourism/_tourismIndustryTable":"Tourism GDP relative to other industries"
+#     }
 
 
 
-    if request.method == 'POST':
-        selected_endpoint = request.form.get('endpoints')
-        filename = endpoints_descriptions.get(selected_endpoint, 'data') + ".csv"
+#     if request.method == 'POST':
+#         selected_endpoint = request.form.get('endpoints')
+#         filename = endpoints_descriptions.get(selected_endpoint, 'data') + ".csv"
 
-        if selected_endpoint in ["Employment/_unEmploymentTimeSeriesData", "Employment/_neetTimeSeriesData", "Tourism/_tourismGdpTimeseriesData", "Tourism/_tourismGdpShareData","Employment/_growthData"]:
-            csv_data = get_chart_data(selected_endpoint)
+#         if selected_endpoint in ["Employment/_unEmploymentTimeSeriesData", "Employment/_neetTimeSeriesData", "Tourism/_tourismGdpTimeseriesData", "Tourism/_tourismGdpShareData","Employment/_growthData"]:
+#             csv_data = get_chart_data(selected_endpoint)
 
-        elif selected_endpoint == "Tourism/_tourismIndustryTable":
-            scraped_data = get_industry_data([selected_endpoint])
-            csv_data = pd.DataFrame(scraped_data, columns=["Area", "Year", "Industry", "Level (Ashburton District)", "Change (Ashburton District)", "", "Level", "Change"])
+#         elif selected_endpoint == "Tourism/_tourismIndustryTable":
+#             scraped_data = get_industry_data([selected_endpoint])
+#             csv_data = pd.DataFrame(scraped_data, columns=["Area", "Year", "Industry", "Level (Ashburton District)", "Change (Ashburton District)", "", "Level", "Change"])
             
-        else:
-            scraped_data = perform_scraping([selected_endpoint])
-            csv_data = pd.DataFrame(scraped_data, columns=["Area", "Year", "Level (Ashburton District)", "Change (Ashburton District)", "", "Level", "Change"])
+#         else:
+#             scraped_data = perform_scraping([selected_endpoint])
+#             csv_data = pd.DataFrame(scraped_data, columns=["Area", "Year", "Level (Ashburton District)", "Change (Ashburton District)", "", "Level", "Change"])
 
-        csv_content = csv_data.to_csv(index=False)
-        response = make_response(csv_content)
-        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
-        response.headers["Content-type"] = "text/csv"
-        return response
+#         csv_content = csv_data.to_csv(index=False)
+#         response = make_response(csv_content)
+#         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+#         response.headers["Content-type"] = "text/csv"
+#         return response
 
-    return render_template('scraper.html', endpoints=endpoints_descriptions)
+#     return render_template('scraper.html', endpoints=endpoints_descriptions)
     
 
 
