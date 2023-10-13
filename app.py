@@ -1,12 +1,12 @@
 from flask import Flask, render_template, send_file, request, make_response
-from data.file_converter import convert_file
-from data.data_downloader import fetch_data
-from data.data_scraper import perform_scraping, get_chart_data, get_industry_data
-from data.ausdataset import get_latest_available_month, get_data
-import pandas as pd
-import json
-import csv
-import os
+# from data.file_converter import convert_file
+# from data.data_downloader import fetch_data
+# from data.data_scraper import perform_scraping, get_chart_data, get_industry_data
+# from data.ausdataset import get_latest_available_month, get_data
+# import pandas as pd
+# import json
+# import csv
+# import os
 
 app = Flask(__name__)
 
@@ -14,27 +14,27 @@ app = Flask(__name__)
 def welcome():
     return render_template('index.html')
 
-with open('datasets.json', 'r') as json_file:
-    config = json.load(json_file)
+# with open('datasets.json', 'r') as json_file:
+#     config = json.load(json_file)
 
-with open('areacode.json', 'r') as json_file:
-    areacode_data = json.load(json_file)
+# with open('areacode.json', 'r') as json_file:
+#     areacode_data = json.load(json_file)
 
-@app.route('/fileconverter', methods=['GET', 'POST'])
-def file_converter():
-    if request.method == 'POST':
-        file = request.files['file']
-        file_type = request.form.get('file_type')
-        convert_to = request.form.get('action')
+# @app.route('/fileconverter', methods=['GET', 'POST'])
+# def file_converter():
+#     if request.method == 'POST':
+#         file = request.files['file']
+#         file_type = request.form.get('file_type')
+#         convert_to = request.form.get('action')
 
-        converted_file = convert_file(file, file_type, convert_to)
+#         converted_file = convert_file(file, file_type, convert_to)
 
-        if converted_file:
-            return send_file(converted_file, as_attachment=True)
-        else:
-            return "Conversion failed."
+#         if converted_file:
+#             return send_file(converted_file, as_attachment=True)
+#         else:
+#             return "Conversion failed."
 
-    return render_template('fileconverter.html')
+#     return render_template('fileconverter.html')
 
 
 # @app.route('/scraper', methods=['GET', 'POST'])
@@ -92,81 +92,81 @@ def file_converter():
     
 
 
-@app.route('/datadownload', methods=['GET', 'POST'])
-def data_download():
-    Indicator_descriptions = {
-        "GDP_Q": "Gross domestic product",
-        "CONS_SPEND_Q": "Consumer spending",
-        "EMP_FILLED_Q": "Employment (place of residence)",
-        "JOBSEEKER_Q": "Jobseeker Support recipients",
-        "UNEMPLOYMENT_Q": "Unemployment Rate",
-        "DAIRY_PAYOUT": "Dairy Payout",
-        "TOURISM_SPEND_Q": "Tourism Expenditure",
-        "GUEST_NIGHTS_Q": "Guest Nights",
-        "CONSENTS_RES_Q": "Residential consents",
-        "CONSENTS_NONRES_Q": "Non-residential consents",
-        "HOUSE_PRICES_Q": "House Values",
-        "HOUSE_SALES_Q": "House Sales",
-        "VEH_REG_NONCOM_Q": "Car Registrations",
-        "VEH_REG_COM_Q": "Commercial vehicle registrations",
-    }
+# @app.route('/datadownload', methods=['GET', 'POST'])
+# def data_download():
+#     Indicator_descriptions = {
+#         "GDP_Q": "Gross domestic product",
+#         "CONS_SPEND_Q": "Consumer spending",
+#         "EMP_FILLED_Q": "Employment (place of residence)",
+#         "JOBSEEKER_Q": "Jobseeker Support recipients",
+#         "UNEMPLOYMENT_Q": "Unemployment Rate",
+#         "DAIRY_PAYOUT": "Dairy Payout",
+#         "TOURISM_SPEND_Q": "Tourism Expenditure",
+#         "GUEST_NIGHTS_Q": "Guest Nights",
+#         "CONSENTS_RES_Q": "Residential consents",
+#         "CONSENTS_NONRES_Q": "Non-residential consents",
+#         "HOUSE_PRICES_Q": "House Values",
+#         "HOUSE_SALES_Q": "House Sales",
+#         "VEH_REG_NONCOM_Q": "Car Registrations",
+#         "VEH_REG_COM_Q": "Commercial vehicle registrations",
+#     }
 
-    if request.method == 'POST':
-        Indicator = request.form.get('indicator')
-        Indicator_description = Indicator_descriptions.get(Indicator, 'data')
-        data = fetch_data(Indicator)
+#     if request.method == 'POST':
+#         Indicator = request.form.get('indicator')
+#         Indicator_description = Indicator_descriptions.get(Indicator, 'data')
+#         data = fetch_data(Indicator)
 
-        if data:
-            csv_data = pd.DataFrame(data)
-            csv_content = csv_data.to_csv(index=False)
+#         if data:
+#             csv_data = pd.DataFrame(data)
+#             csv_content = csv_data.to_csv(index=False)
 
-            response = make_response(csv_content)
-            response.headers["Content-Disposition"] = f"attachment; filename={Indicator_description}.csv"
-            response.headers["Content-type"] = "text/csv"
-            return response
-        else:
-            return "Data fetching failed."
+#             response = make_response(csv_content)
+#             response.headers["Content-Disposition"] = f"attachment; filename={Indicator_description}.csv"
+#             response.headers["Content-type"] = "text/csv"
+#             return response
+#         else:
+#             return "Data fetching failed."
 
-    return render_template('datadownload.html', Indicator_descriptions=Indicator_descriptions)
+#     return render_template('datadownload.html', Indicator_descriptions=Indicator_descriptions)
 
 
 
-@app.route('/ausdataset', methods=['GET', 'POST'])
-def ausdataset():
-    if request.method == 'POST':
-        dataset_choice = request.form['dataset']
-        chunk_size = int(request.form['chunk_size'])
+# @app.route('/ausdataset', methods=['GET', 'POST'])
+# def ausdataset():
+#     if request.method == 'POST':
+#         dataset_choice = request.form['dataset']
+#         chunk_size = int(request.form['chunk_size'])
         
-        if dataset_choice not in config:
-            return "Invalid dataset choice."
+#         if dataset_choice not in config:
+#             return "Invalid dataset choice."
         
-        name = config[dataset_choice]["name"]
-        Baseurl = config[dataset_choice]["Baseurl"]
-        keyending = config[dataset_choice]["keyending"]
-        latest_month_url = config[dataset_choice]["latest_month_url"]
-        areacode_file_path = config[dataset_choice]["areacode file path"]
-        areacode = areacode_data[areacode_file_path]
+#         name = config[dataset_choice]["name"]
+#         Baseurl = config[dataset_choice]["Baseurl"]
+#         keyending = config[dataset_choice]["keyending"]
+#         latest_month_url = config[dataset_choice]["latest_month_url"]
+#         areacode_file_path = config[dataset_choice]["areacode file path"]
+#         areacode = areacode_data[areacode_file_path]
         
-        latest_month = get_latest_available_month(latest_month_url)
+#         latest_month = get_latest_available_month(latest_month_url)
 
-        data_with_labels=get_data(Baseurl,keyending,latest_month,areacode,chunk_size)
+#         data_with_labels=get_data(Baseurl,keyending,latest_month,areacode,chunk_size)
 
-        if data_with_labels:
-            with open(name, "w", newline="", encoding="utf-8") as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerows(data_with_labels)
+#         if data_with_labels:
+#             with open(name, "w", newline="", encoding="utf-8") as csvfile:
+#                 writer = csv.writer(csvfile)
+#                 writer.writerows(data_with_labels)
 
-            response = make_response(open(name, 'rb').read())
-            response.headers["Content-Disposition"] = f"attachment; filename={name}.csv"
-            response.headers["Content-type"] = "text/csv"
-            os.remove(name)
+#             response = make_response(open(name, 'rb').read())
+#             response.headers["Content-Disposition"] = f"attachment; filename={name}.csv"
+#             response.headers["Content-type"] = "text/csv"
+#             os.remove(name)
 
-            return response
+#             return response
         
-        else:
-            return "Data fetching failed."
+#         else:
+#             return "Data fetching failed."
 
-    return render_template('ausdataset.html' ,config=config)
+#     return render_template('ausdataset.html' ,config=config)
 
 if __name__ == '__main__':
     app.run(debug=True)
