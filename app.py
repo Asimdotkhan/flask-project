@@ -1,12 +1,12 @@
 from flask import Flask, render_template, send_file, request, make_response
 from data.file_converter import convert_file
-from data.data_downloader import fetch_data
-from data.data_scraper import perform_scraping, get_chart_data, get_industry_data
-from data.ausdataset import get_latest_available_month, get_data
-import pandas as pd
-import json
-import csv
-import os
+# from data.data_downloader import fetch_data
+# from data.data_scraper import perform_scraping, get_chart_data, get_industry_data
+# from data.ausdataset import get_latest_available_month, get_data
+# import pandas as pd
+# import json
+# import csv
+# import os
 
 app = Flask(__name__)
 
