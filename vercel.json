@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "app.py",  // Specify the entry point for your ASGI app
+      "use": "@vercel/python"  // Vercel Python builder
+    }
+  ],
+  "routes": [
+    {
+      "src": "/.*",
+      "dest": "app.py"  // Redirect all traffic to your ASGI app
+    }
+  ]
+}
